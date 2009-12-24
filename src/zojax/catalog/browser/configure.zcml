@@ -1,0 +1,13 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.catalog">
+
+  <zojax:pagelet
+     name="index.html"
+     for="..interfaces.ICatalogConfiglet"
+     template="advanced.pt"
+     class=".advanced.Advanced"
+     permission="zojax.Configure" />
+
+</configure>

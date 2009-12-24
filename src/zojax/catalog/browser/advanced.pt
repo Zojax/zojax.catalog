@@ -1,0 +1,42 @@
+<div class="z-form-edit" i18n:domain="zojax.catalog">
+  <h1 i18n:translate="">Manage catalog</h1>
+  <br />
+
+  <form method="post" action="index.html">
+    <table class="z-table" summary="Indexes">
+      <thead>
+	<tr>
+	  <th></th>
+	  <th i18n:translate="">Index</th>
+	  <th i18n:translate="">Document Count</th>
+	  <th i18n:translate="">Word Count</th>
+	</tr>
+      </thead>
+      <tbody>
+	<tal:block tal:repeat="indexname view/catalog">
+	  <tr tal:define="info python:view.getIndexInfo(indexname)"
+	      tal:attributes="class python:repeat['indexname'].odd()
+			      and 'even' or 'odd'">
+	    <td><input name="indexIds:list" type="checkbox"
+		       tal:attributes="value indexname"/></td>
+	    <td tal:content="indexname">foo</td>
+	    <td tal:content="info/documents|default">-</td>
+	    <td tal:content="info/words|default">-</td>
+	  </tr>
+	</tal:block>
+      </tbody>
+    </table>
+    
+    <div class="z-form-controls">
+      <hr />
+      <input type="submit" value="Reindex" name="form.button.reindex"
+	     class="z-form-button" i18n:attributes="value"/>
+      <input type="submit" value="Reindex security information"
+	     name="form.button.security"
+	     class="z-form-button" i18n:attributes="value"/>
+      <input type="submit" value="Remove"
+	     name="form.button.remove"
+	     class="z-form-removebutton" i18n:attributes="value"/>
+    </div>
+  </form>
+</div>

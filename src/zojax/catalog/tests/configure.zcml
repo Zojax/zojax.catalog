@@ -1,0 +1,45 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:zojax="http://namespaces.zope.org/zojax">
+
+  <zojax:content
+     name="folder"
+     title="Folder"
+     schema="zojax.catalog.tests.content.IFolder"
+     class="zojax.catalog.tests.content.Folder" />
+  
+  <class class="zojax.catalog.tests.content.Folder">
+    <require
+       permission="zope.Public"
+       interface="zojax.catalog.tests.content.IFolder
+		  zope.app.container.interfaces.IReadContainer
+		  zope.app.container.interfaces.IWriteContainer" />
+  </class>
+
+  <zojax:content
+     name="content"
+     title="Content"
+     schema="zojax.catalog.tests.content.IContent"
+     class="zojax.catalog.tests.content.Content"
+     type="zojax.content.type.interfaces.IActivePortalType" />
+
+  <class class="zojax.catalog.tests.content.Content">
+    <implements interface="zojax.ownership.interfaces.IOwnerAware" />
+    <implements interface="zojax.content.type.interfaces.ISearchableContent" />
+
+    <require
+       permission="zope.View"
+       interface="zojax.catalog.tests.content.IContent"
+       set_schema="zojax.catalog.tests.content.IContent" />
+  </class>
+
+  <permissions for=".content.IContent"
+	       name="Content permissions">
+    <denyAll permission="zope.View" />
+    <grant permission="zope.View"
+	   role="content.Owner
+		 zope.Manager" />
+  </permissions>
+
+
+</configure>
