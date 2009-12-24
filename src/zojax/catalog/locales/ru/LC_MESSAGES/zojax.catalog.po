@@ -1,0 +1,51 @@
+##############################################################################
+#
+# Copyright (c) 2009 Zope Foundation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Sat Nov 22 15:28:37 2008\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nikolay Kim <fafhrd91@gmail.com>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: /Users/fafhrd/.buildout/eggs/zojax.pathindex-1.0.1-py2.5.egg/zojax/pathindex/configure.zcml:14
+msgid "Index object path"
+msgstr ""
+
+#: /Users/fafhrd/.buildout/eggs/zojax.pathindex-1.0.1-py2.5.egg/zojax/pathindex/configure.zcml:6
+#: /Users/fafhrd/.buildout/eggs/zojax.pathindex-1.0.1-py2.5.egg/zojax/pathindex/configure.zcml:14
+msgid "Path Index"
+msgstr ""
+
+#: src/zojax/catalog/catalog.py:190
+msgid "Index doesn't support sorting."
+msgstr ""
+
+#: src/zojax/catalog/catalog.py:194
+#. Default: ""
+msgid "Invalid index: ${sort_on}"
+msgstr ""
+
+#: src/zojax/catalog/configure.zcml:47
+msgid "Portal searching service."
+msgstr "Поисковый сервис для сайта."
+
+#: src/zojax/catalog/configure.zcml:47
+msgid "Portal catalog"
+msgstr "Каталог"
+

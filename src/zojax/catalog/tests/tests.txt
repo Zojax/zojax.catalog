@@ -1,0 +1,372 @@
+=============
+zojax catalog
+=============
+
+  >>> from zope import interface, component, event
+  >>> from zope.testbrowser.testing import Browser
+  >>> from zope.app.testing.functional import getRootFolder
+  >>> from zope.app.component.hooks import setSite
+  >>> from zope.lifecycleevent import ObjectCreatedEvent, ObjectModifiedEvent
+  >>> from zope.interface.verify import verifyClass, verifyObject
+  >>> from zope.app.catalog.interfaces import ICatalog, ICatalogIndex
+  >>> from zope.app.intid import IntIds
+  >>> from zope.app.intid.interfaces import IIntIds
+  >>> from zope.security.management import newInteraction, endInteraction
+  >>> from zope.security.management import checkPermission, getInteraction
+  >>> from zope.app.security.interfaces import IAuthentication
+  >>> from zojax.catalog import catalog as catmod
+  >>> from zojax.catalog import interfaces, defaultindexes
+  >>> from zojax.catalog.tests import content
+
+  >>> root = getRootFolder()
+  >>> setSite(root)
+  >>> sm = root.getSiteManager()
+  >>> root['intids'] = IntIds()
+  >>> id = root['intids'].register(root)
+  >>> sm.registerUtility(root['intids'], IIntIds)
+
+  >>> verifyClass(interfaces.ICatalog, catmod.Catalog)
+  True
+
+  >>> catalog = catmod.Catalog()
+  >>> verifyObject(interfaces.ICatalog, catalog)
+  True
+
+  >>> admin = Browser()
+  >>> admin.handleErrors = False
+  >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+
+  >>> folder = content.Folder()
+  >>> event.notify(ObjectCreatedEvent(folder))
+  >>> root['folder'] = folder
+
+
+Install catalog
+
+  >>> root['catalog'] = catalog
+  >>> sm.registerUtility(root['catalog'], interfaces.ICatalog)
+
+
+Interaction
+
+  >>> class Participation:
+  ...     interaction = None
+  ...     def __init__(self, principal):
+  ...         self.principal = principal
+
+
+Default indexes
+
+  >>> catalog = sm.getUtility(interfaces.ICatalog)
+
+  >>> for index in catalog.getIndexes():
+  ...     print index.__name__, index
+  owners <zc.catalog.catalogindex.SetIndex ...>
+  traversablePath <zojax.pathindex.index.PathIndex ...>
+  name <zc.catalog.catalogindex.ValueIndex ...>
+  effective <zc.catalog.catalogindex.NormalizationWrapper ...>
+  title <zc.catalog.catalogindex.ValueIndex ...>
+  typeType <zc.catalog.catalogindex.SetIndex ...>
+  expires <zc.catalog.catalogindex.NormalizationWrapper ...>
+  modified <zc.catalog.catalogindex.NormalizationWrapper ...>
+  allowedRoleAndPrincipals <zc.catalog.catalogindex.SetIndex ...>
+  searchableText <...TextIndex ...>
+  searchContext <zc.catalog.catalogindex.SetIndex ...>
+  created <zc.catalog.catalogindex.NormalizationWrapper ...>
+  hidden <zc.catalog.catalogindex.ValueIndex object ...>
+  creators <zc.catalog.catalogindex.SetIndex ...>
+  type <zc.catalog.catalogindex.ValueIndex ...>
+
+  >>> catalog.getIndex('created')
+  <zc.catalog.catalogindex.NormalizationWrapper ...>
+
+  >>> len(list(catalog.getIndexes()))
+  15
+
+
+Creaet object as manager
+
+  >>> auth = sm.getUtility(IAuthentication)
+
+  >>> endInteraction()
+  >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+
+  >>> list(catalog.searchResults())
+  []
+
+  >>> item = content.Content(title=u'Managers content')
+  >>> event.notify(ObjectCreatedEvent(item))
+
+  >>> from zope.securitypolicy.interfaces import IPrincipalPermissionManager
+  >>> IPrincipalPermissionManager(item).denyPermissionToPrincipal('zope.View', 'zope.user')
+
+  >>> root['content1'] = item
+
+  >>> list(catalog.searchResults())
+  [<MyContent "content1"-"Managers content">]
+
+  >>> endInteraction()
+
+Create content as user
+
+  >>> user = Browser()
+  >>> user.handleErrors = False
+  >>> user.addHeader("Authorization", "Basic user:userpw")
+
+  >>> user.open("http://localhost/folder/+/")
+  >>> user.getLink('Content').click()
+  >>> user.getControl('Title').value = 'Users content'
+  >>> user.getControl('Content short name').value = 'Content users'
+  >>> user.getControl(name='content.add.buttons.add').click()
+
+  >>> from zojax.ownership.interfaces import IOwnership
+  >>> from zojax.security.interfaces import IExtendedGrantInfo
+
+  >>> newInteraction(Participation(auth.getPrincipal('zope.user')))
+
+  >>> item = root['folder']['Content users']
+
+  >>> list(catalog.searchResults())
+  [<MyContent "Content users"-"Users content">]
+
+  >>> endInteraction()
+
+Search by manager with sorting
+
+  >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+  >>> list(catalog.searchResults(sort_on='name'))
+  [<MyContent "Content users"-"Users content">, <MyContent "content1"-"Managers content">]
+
+  >>> list(catalog.searchResults(sort_on='name', sort_order='reverse'))
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users"-"Users content">]
+
+  >>> catalog.searchResults(sort_on='name')[:]
+  [<MyContent "Content users"-"Users content">, <MyContent "content1"-"Managers content">]
+
+  >>> catalog.searchResults(sort_on='name').get(0)
+  <MyContent "Content users"-"Users content">
+
+  >>> endInteraction()
+
+Search context
+--------------
+
+  >>> folder2 = content.Folder()
+  >>> event.notify(ObjectCreatedEvent(folder2))
+  >>> root['folder2'] = folder2
+  >>> interface.alsoProvides(folder2, interfaces.ISearchContext)
+
+  >>> folder3 = content.Folder()
+  >>> event.notify(ObjectCreatedEvent(folder3))
+  >>> root['folder3'] = folder3
+  >>> interface.alsoProvides(folder3, interfaces.ISearchContext)
+
+  >>> user.open("http://localhost/folder2/+/")
+  >>> user.getLink('Content').click()
+  >>> user.getControl('Title').value = 'Users content 2'
+  >>> user.getControl('Content short name').value = 'Content users 2'
+  >>> user.getControl(name='content.add.buttons.add').click()
+
+  >>> user.open("http://localhost/folder3/+/")
+  >>> user.getLink('Content').click()
+  >>> user.getControl('Title').value = 'Users content 3'
+  >>> user.getControl('Content short name').value = 'Content users 3'
+  >>> user.getControl(name='content.add.buttons.add').click()
+
+  >>> newInteraction(Participation(auth.getPrincipal('zope.mgr')))
+
+  >>> list(catalog.searchResults(sort_on='name'))
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+
+  >>> list(catalog.searchResults(sort_on='name', searchContext=folder2))
+  [<MyContent "Content users 2"-"Users content 2">]
+
+  >>> list(catalog.searchResults(sort_on='name', searchContext=folder3))
+  [<MyContent "Content users 3"-"Users content 3">]
+
+  >>> list(catalog.searchResults(sort_on='name', searchContext=(folder2, folder3)))
+  [<MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">]
+
+  >>> list(catalog.searchResults(sort_on='name', searchContext=root))
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+
+
+Results
+-------
+
+  >>> results = catalog.searchResults(sort_on='name')
+  >>> len(results)
+  4
+  >>> results[0]
+  <MyContent "Content users"-"Users content">
+  >>> results[-1]
+  <MyContent "content1"-"Managers content">
+  >>> results[1:]
+  [<MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+  >>> results[:2]
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">]
+  >>> results[:]
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+  >>> results[1:2]
+  [<MyContent "Content users 2"-"Users content 2">]
+  >>> results[10]
+  Traceback (most recent call last):
+  ...
+  IndexError: list index out of range
+  >>> results[:100]
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+  >>> results[100:]
+  []
+  >>> results[100:200]
+  []
+  >>> results[-100:200]
+  [<MyContent "Content users"-"Users content">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users 3"-"Users content 3">, <MyContent "content1"-"Managers content">]
+
+
+Reverse results
+---------------
+
+  >>> results = catalog.searchResults(sort_on='name', sort_order='reverse')
+  >>> len(results)
+  4
+  >>> results[0]
+  <MyContent "content1"-"Managers content">
+  >>> results[-1]
+  <MyContent "Content users"-"Users content">
+  >>> results[1:]
+  [<MyContent "Content users 3"-"Users content 3">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users"-"Users content">]
+  >>> results[:2]
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users 3"-"Users content 3">]
+  >>> results[:]
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users 3"-"Users content 3">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users"-"Users content">]
+  >>> results[1:2]
+  [<MyContent "Content users 3"-"Users content 3">]
+  >>> results[10]
+  Traceback (most recent call last):
+  ...
+  IndexError: list index out of range
+  >>> results[:100]
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users 3"-"Users content 3">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users"-"Users content">]
+  >>> results[100:]
+  []
+  >>> results[100:200]
+  []
+  >>> results[-100:100]
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users 3"-"Users content 3">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users"-"Users content">]
+
+
+
+Expires/Effective
+-----------------
+
+  >>> [c.__name__ for c in catalog.searchResults(sort_on='name', sort_order='reverse')]
+  [u'content1', u'Content users 3', u'Content users 2', u'Content users']
+
+  >>> from pytz import utc
+  >>> from datetime import datetime
+  >>> from zope.dublincore.interfaces import IDCPublishing
+
+  >>> contentOb = root['content1']
+  >>> publishInfo = IDCPublishing(contentOb)
+
+change expires date
+
+  >>> publishInfo.expires = datetime(2000, 1, 1, tzinfo=utc)
+  >>> event.notify(ObjectModifiedEvent(contentOb))
+
+  >>> [c.__name__ for c in catalog.searchResults(sort_on='name', sort_order='reverse')]
+  [u'Content users 3', u'Content users 2', u'Content users']
+
+  >>> [c.__name__ for c in catalog.searchResults(
+  ...     sort_on='name', sort_order='reverse', noPublishing=True)]
+  [u'content1', u'Content users 3', u'Content users 2', u'Content users']
+
+  >>> publishInfo.expires = datetime(2099, 1, 1, tzinfo=utc)
+  >>> event.notify(ObjectModifiedEvent(contentOb))
+
+  >>> [c.__name__ for c in catalog.searchResults(sort_on='name', sort_order='reverse')]
+  [u'content1', u'Content users 3', u'Content users 2', u'Content users']
+
+
+change effective date
+
+  >>> publishInfo.effective = datetime(2020, 1, 1, tzinfo=utc)
+  >>> event.notify(ObjectModifiedEvent(contentOb))
+
+  >>> [c.__name__ for c in catalog.searchResults(sort_on='name', sort_order='reverse')]
+  [u'Content users 3', u'Content users 2', u'Content users']
+
+  >>> [c.__name__ for c in catalog.searchResults(
+  ...     sort_on='name', sort_order='reverse', noPublishing=True)]
+  [u'content1', u'Content users 3', u'Content users 2', u'Content users']
+
+  >>> publishInfo.effective = datetime(2000, 1, 2, tzinfo=utc)
+  >>> event.notify(ObjectModifiedEvent(contentOb))
+
+
+queryCatalog
+------------
+
+it also available in tales as "python:modules['zojax.catalog'].queryCatalog"
+
+  >>> from zojax.catalog import queryCatalog
+  >>> res = queryCatalog(sort_on='name', sort_order='reverse')
+  >>> list(res)
+  [<MyContent "content1"-"Managers content">, <MyContent "Content users 3"-"Users content 3">, <MyContent "Content users 2"-"Users content 2">, <MyContent "Content users"-"Users content">]
+
+  >>> res[0]
+  <MyContent "content1"-"Managers content">
+
+  >>> print res.get(100)
+  None
+
+We can reindex objects searched by query
+
+  all indexes
+
+  >>> catalog.updateIndexesByQuery()
+
+  or selected indexes
+
+  >>> catalog.updateIndexesByQuery(indexNames=['owners'])
+
+
+We can search results with extra indexes
+
+  >>> from zc.catalog.catalogindex import ValueIndex
+  >>> isSetIndex = ValueIndex('isSet', content.IsSet)
+  >>> catalog.updateIndex(isSetIndex)
+
+  >>> res = catalog.searchResults(
+  ...     isSetIndex={'any_of': (True,)},
+  ...     noSecurityChecks=True,
+  ...     indexes={'isSetIndex': isSetIndex})
+
+Unknown sort_on index
+
+  >>> catalog.searchResults(sort_on='unknown')
+  Traceback (most recent call last):
+  ...
+  InvalidIndex: Invalid index...
+
+Sort index should be ISortable
+
+  >>> catalog.searchResults(sort_on='owners')
+  Traceback (most recent call last):
+  ...
+  NotSortableIndex: Index doesn't support sorting.
+
+just tests
+
+  >>> catalog.unindex_doc(1)
+  >>> catalog.updateIndexes()
+  >>> catalog.updateIndexesByName(('owners',))
+  >>> catalog.clear()
+
+
+moer tests
+
+  >>> list(catmod.queryCatalog({'name': {'any_of': (None,)}}))
+  []
+
+  >>> setSite(None)

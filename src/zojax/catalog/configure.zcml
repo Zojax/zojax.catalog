@@ -1,0 +1,85 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.catalog">
+
+  <!-- catalog -->
+  <class class=".catalog.Catalog">
+    <implements
+       interface="zope.annotation.interfaces.IAttributeAnnotatable" />
+
+    <require
+       permission="zope.Public"
+       interface="zope.app.catalog.interfaces.ICatalogQuery" />
+
+    <require
+       permission="zojax.Configure"
+       attributes="updateIndexesByName updateIndexesByQuery"
+       interface="zope.app.catalog.interfaces.ICatalogEdit
+      zope.app.container.interfaces.IContainer" />
+  </class>
+
+  <adapter factory=".context.siteSearchContext" />
+
+  <subscriber handler=".catalog.afterCallHandler" />
+
+  <!-- default indexes -->
+  <include file="defaultindexes.zcml" />
+
+  <!-- sort adapters -->
+  <adapter factory=".sortable.valueSortable" />
+
+  <adapter
+     for="zc.catalog.interfaces.INormalizationWrapper"
+     factory=".sortable.valueSortable" />
+
+  <!-- results objects -->
+  <class class=".result.ResultSet">
+    <allow
+       attributes="__getslice__"
+       interface="zope.interface.common.mapping.IEnumerableMapping" />
+  </class>
+
+  <class class=".result.ReverseResultSet">
+    <allow
+       attributes="__getslice__"
+       interface="zope.interface.common.mapping.IEnumerableMapping" />
+  </class>
+
+  <!-- configlet -->
+  <zojax:configlet
+     name="system.catalog"
+     title="Catalog"
+     description="Content indexing service."
+     schema=".interfaces.ICatalogConfiglet"
+     class=".configlet.CatalogConfiglet"
+     permission="zojax.Configure">
+
+    <require
+       permission="zope.View"
+       interface="zope.app.catalog.interfaces.ICatalogQuery" />
+
+  </zojax:configlet>
+
+  <!-- queryCatalog -->
+  <module module="zojax.catalog">
+    <allow attributes="queryCatalog" />
+  </module>
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales"/>
+
+  <!-- browser views -->
+  <include package=".browser" />
+
+  <!-- bootstrap -->
+  <include file="bootstrap.zcml" />
+
+  <!-- generations -->
+  <utility
+     name="zojax.catalog"
+     provides="zope.app.generations.interfaces.ISchemaManager"
+     component=".generations.schemaManager" />
+
+</configure>

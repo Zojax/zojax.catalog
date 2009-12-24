@@ -1,0 +1,241 @@
+=======
+CHANGES
+=======
+
+1.4.7 (2009-11-09)
+------------------
+
+- Fixed 'searchContext' when context id is passed
+
+- Add timezone info in DateTimeNormalizer
+
+
+1.4.6 (2009-10-14)
+------------------
+
+- Added monkey patch for ValueIndex.index_doc
+
+- Don't crash in catalog's management view when some of indexes don't support
+  document/word count.
+
+
+1.4.5 (2009-09-17)
+------------------
+
+- Monkey patch for ValueIndex and SetIndex to workaround possible BTrees bug
+
+
+1.4.4 (2009-09-09)
+------------------
+
+- Removed uneeded monkey patch
+
+- Fixed datetime normalized indexes
+
+
+1.4.3 (2009-09-04)
+------------------
+
+- Check object id before index (object could be removed before end of interaction)
+
+- UpdateIndexes on database opened event added
+
+
+1.4.2 (2009-08-28)
+------------------
+
+- Remove all proxies for before indexing
+
+- Allow pass dict as search context, and allow use int as search context
+
+
+1.4.1 (2009-08-11)
+------------------
+
+- Index all objects once at the end of request
+
+- Do not index some indexes for IDraftedContent
+
+- Allow remove indexes in configlet form
+
+- Added 'hidden' index, IHiddenContent is mrker for hidden content
+
+
+1.4.0 (2009-07-14)
+------------------
+
+- indexObject helper function added
+
+- Publishing date TZ awareness added
+
+- Normalized datetime catalog indexes added
+
+
+1.3.9 (2009-06-22)
+------------------
+
+- Make index parameter in ResultsSet.applySorting optional to use existing
+  information for sorting
+
+- Added reindex security info to catalog configlet form
+
+- Fixed publishing search parameters
+
+
+1.3.8 (2009-06-05)
+------------------
+
+- Use default values for effective and expires indexes
+  for objects that don't support IDCPublishing
+
+- Better access rights calculation
+
+- Copyright changed to 'Zope Foundation and Contributors'
+
+
+1.3.7 (2009-05-25)
+------------------
+
+- Fixed 'allowedRolesAndPrincipals' calculation for unauthenticated user
+
+
+1.3.6 (2009-05-20)
+------------------
+
+- Catalog special groups security info
+
+- Get listAllowedRoles for searchContext
+
+- More safe slice for resultset
+
+
+1.3.5 (2009-05-12)
+------------------
+
+- Hide catalog configlet if catalog is not available
+
+
+1.3.4 (2009-05-04)
+------------------
+
+- Try adapts content to ISearchableContent instead of checks for provides
+
+
+1.3.3 (2009-04-29)
+------------------
+
+- Added 'title' case insensitive index for IDCDescriptiveProperties
+
+- Added 'items' method to ResultSet object, it returns (int id, object)
+
+- Fixed 'effective', 'expires', 'creators' indexers for objects that doesn't implement ICMFDublinCore
+
+- Do not use z3c.autoinclude
+
+
+1.3.2 (2009-03-30)
+------------------
+
+- Fixed reindex
+
+
+1.3.1 (2009-03-15)
+------------------
+
+- Check request for none value
+
+
+1.3.0 (2009-03-09)
+------------------
+
+- Added searchable text index to the default indexes.
+
+- Automaticly install catalog
+
+- Fixed bug with IDCPublishing indexing
+
+- Remove product code
+
+
+1.2.0 (2009-01-20)
+------------------
+
+- Added index factory, create index on demand.
+
+- Converted default indexes to index factories
+
+
+1.1.0 (2009-01-07)
+------------------
+
+- We can pass indexes to searchResults method
+
+
+1.0.7 (2008-12-22)
+------------------
+
+- Fixed wrong imports
+
+
+1.0.6 (2008-12-01)
+------------------
+
+- Fixed tests tear down for zope3.4
+
+
+1.0.5 (2008-11-22)
+------------------
+
+- Optimize results sorting
+
+- Added russian translation
+
+
+1.0.4 (2008-11-13)
+------------------
+
+- Use zojax.content.type instead of zojax.content
+
+
+1.0.3 (2008-09-24)
+------------------
+
+- Fixed bug with enclosed search context
+
+
+1.0.2 (2008-09-23)
+------------------
+
+- More results slicing fixes
+
+
+1.0.1 (2008-09-22)
+------------------
+
+- Fixed search results slicing
+
+
+1.0.0 (2008-09-22)
+------------------
+
+- API refactored
+
+- Added search context
+
+- Added external index support
+
+- Added tests
+
+- Removed ui related code
+
+
+0.10.1 (2008-02-12)
+-------------------
+
+- Use zojax.viewlet
+
+
+0.10 (2008-02-01)
+------------------
+
+- Initial release.

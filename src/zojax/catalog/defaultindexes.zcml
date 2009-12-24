@@ -1,0 +1,79 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope">
+
+  <utility
+     name="allowedRoleAndPrincipals"
+     component=".defaultindexes.allowedRoleAndPrincipalsIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="traversablePath"
+     component=".defaultindexes.traversablePathIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="name"
+     component=".defaultindexes.nameIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="title"
+     component=".defaultindexes.titleIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="hidden"
+     component=".defaultindexes.hiddenIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="owners"
+     component=".defaultindexes.ownersIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="created"
+     component=".defaultindexes.createdIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="modified"
+     component=".defaultindexes.modifiedIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="expires"
+     component=".defaultindexes.expiresIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="effective"
+     component=".defaultindexes.effectiveIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="creators"
+     component=".defaultindexes.creatorsIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="type"
+     component=".defaultindexes.typeIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="typeType"
+     component=".defaultindexes.typeTypeIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="searchContext"
+     component=".defaultindexes.searchContextIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+  <utility
+     name="searchableText"
+     component=".defaultindexes.searchableTextIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+</configure>
