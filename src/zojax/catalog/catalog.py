@@ -246,6 +246,9 @@ class Catalog(catalog.Catalog):
             if context:
                 searchterms['searchContext'] = {'any_of': context}
 
+        #apply pluggable query
+        searchterms.update(self.getPluggableQuery())
+
         # apply
         results = self.apply(searchterms, sort_on, indexes)
 
@@ -257,6 +260,13 @@ class Catalog(catalog.Catalog):
             return ReverseResultSet(results, uidutil)
         else:
             return ResultSet(results, uidutil)
+        
+    def getPluggableQuery(self):
+        query = {}
+        for name, utility in sorted(getUtilitiesFor(interfaces.ICatalogQueryPlugin), 
+                                    key=lambda x: x[1].weight):
+            query.update(utility())
+        return query
 
 
 def queryCatalog(sort_on=None, sort_order=None, **searchterms):

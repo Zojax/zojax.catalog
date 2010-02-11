@@ -307,12 +307,24 @@ Pluggable catalog query parameters
 
 We can register catalog query parameters as plugins:
 
-  >>> interfaces.ICatalogQueryPlugin
+  >>> class QueryPlugin(object):
+  ...
+  ...     weight = 1
+  ...
+  ...     def __call__(self):
+  ...         return {'name': {'any_of': ('content1',)}}
+
+  >>> sm.registerUtility(QueryPlugin(), interfaces.ICatalogQueryPlugin, name='test')
 
   >>> [c.__name__ for c in catalog.searchResults(
   ...     sort_on='name', sort_order='reverse', noPublishing=True)]
+  [u'content1']
 
 
+Cleaning up
+
+  >>> sm.unregisterUtility(provided=interfaces.ICatalogQueryPlugin, name='test')
+  True
 
 queryCatalog
 ------------

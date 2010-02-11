@@ -15,7 +15,7 @@
 
 $Id$
 """
-from zope import interface
+from zope import interface, schema
 from zope.index.interfaces import IIndexSearch
 from zope.app.catalog.interfaces import ICatalog
 from zope.i18nmessageid import MessageFactory
@@ -95,3 +95,12 @@ class ICatalogConfiglet(interface.Interface):
 
 class ICatalogAwareSite(interface.Interface):
     """ marker interface for site that can contain catalog """
+    
+    
+class ICatalogQueryPlugin(interface.Interface):
+    """ catalog query plugin """
+    
+    weight = schema.Int(title=_(u'Weight'))
+    
+    def __call__():
+        """call"""
