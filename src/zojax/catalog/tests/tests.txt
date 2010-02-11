@@ -303,6 +303,16 @@ change effective date
   >>> publishInfo.effective = datetime(2000, 1, 2, tzinfo=utc)
   >>> event.notify(ObjectModifiedEvent(contentOb))
 
+Pluggable catalog query parameters
+
+We can register catalog query parameters as plugins:
+
+  >>> interfaces.ICatalogQueryPlugin
+
+  >>> [c.__name__ for c in catalog.searchResults(
+  ...     sort_on='name', sort_order='reverse', noPublishing=True)]
+
+
 
 queryCatalog
 ------------
