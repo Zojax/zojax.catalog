@@ -104,3 +104,6 @@ class ICatalogQueryPlugin(interface.Interface):
     
     def __call__():
         """call"""
+        
+    def isAvailable():
+        """ is available """

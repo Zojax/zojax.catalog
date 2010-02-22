@@ -84,7 +84,7 @@ Default indexes
   15
 
 
-Creaet object as manager
+Create object as manager
 
   >>> auth = sm.getUtility(IAuthentication)
 
@@ -313,6 +313,9 @@ We can register catalog query parameters as plugins:
   ...
   ...     def __call__(self):
   ...         return {'name': {'any_of': ('content1',)}}
+  ...
+  ...     def isAvailable(self):
+  ...         return True
 
   >>> sm.registerUtility(QueryPlugin(), interfaces.ICatalogQueryPlugin, name='test')
 

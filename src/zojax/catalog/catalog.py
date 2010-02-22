@@ -265,7 +265,8 @@ class Catalog(catalog.Catalog):
         query = {}
         for name, utility in sorted(getUtilitiesFor(interfaces.ICatalogQueryPlugin), 
                                     key=lambda x: x[1].weight):
-            query.update(utility())
+            if utility.isAvailable():
+                query.update(utility())
         return query
 
 
