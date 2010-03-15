@@ -102,7 +102,10 @@ def value_unindex_doc(self, doc_id):
             self.values_to_documents = new_values_to_documents
             values_to_documents = self.values_to_documents
             docs = values_to_documents.get(value)
-            docs.remove(doc_id)
+            try:
+                docs.remove(doc_id)
+            except AttributeError:
+                docs = True
         # Patch ends here
 
         if not docs:
