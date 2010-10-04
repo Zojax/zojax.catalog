@@ -76,8 +76,11 @@ def value_index_doc(self, doc_id, value):
             # Patch ends here
 
             if not docs:
-                del values_to_documents[old]
-                self.wordCount.change(-1)
+                try:
+                    del values_to_documents[old]
+                    self.wordCount.change(-1)
+                except KeyError:
+                    pass
         self._add_value(doc_id, value)
 
 
@@ -109,8 +112,11 @@ def value_unindex_doc(self, doc_id):
         # Patch ends here
 
         if not docs:
-            del values_to_documents[value]
-            self.wordCount.change(-1)
+            try:
+                del values_to_documents[value]
+                self.wordCount.change(-1)
+            except KeyError:
+                    pass
 
 
 ValueIndex.unindex_doc = value_unindex_doc
@@ -139,8 +145,10 @@ def set_unindex_doc(self, doc_id):
             # Patch ends here
 
             if not docs:
-                del values_to_documents[v]
-                self.wordCount.change(-1)
-
+                try:
+                    del values_to_documents[v]
+                    self.wordCount.change(-1)
+                except KeyError:
+                    pass
 
 SetIndex.unindex_doc = set_unindex_doc
