@@ -84,7 +84,7 @@ def value_index_doc(self, doc_id, value):
         self._add_value(doc_id, value)
 
 
-ValueIndex.index_doc = value_index_doc
+#ValueIndex.index_doc = value_index_doc
 
 
 def value_unindex_doc(self, doc_id):
@@ -119,7 +119,7 @@ def value_unindex_doc(self, doc_id):
                     pass
 
 
-ValueIndex.unindex_doc = value_unindex_doc
+#ValueIndex.unindex_doc = value_unindex_doc
 
 
 def set_unindex_doc(self, doc_id):
@@ -151,4 +151,4 @@ def set_unindex_doc(self, doc_id):
                 except KeyError:
                     pass
 
-SetIndex.unindex_doc = set_unindex_doc
+#SetIndex.unindex_doc = set_unindex_doc
