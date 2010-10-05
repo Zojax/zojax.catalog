@@ -47,6 +47,7 @@ catalog.reindexDocSubscriber.func_code = reindexDocSubscriber.func_code
 # values_to_documents attribute in case if values_to_documents.get(value)
 # returns None (AttributeError) or if docs.remove(doc_id) raises KeyError
 
+
 def value_index_doc(self, doc_id, value):
     if value is None:
         self.unindex_doc(doc_id)
