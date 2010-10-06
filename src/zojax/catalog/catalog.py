@@ -48,7 +48,7 @@ from result import ResultSet, ReverseResultSet
 class Catalog(catalog.Catalog):
     interface.implements(ICatalog)
 
-    optimize_index = True
+    optimize_index = False
 
     def createIndex(self, name, factory):
         index = factory()
