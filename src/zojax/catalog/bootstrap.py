@@ -22,6 +22,7 @@ from zope import event, component, interface
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.traversing.interfaces import IContainmentRoot
 from zope.app.component.hooks import getSite, setSite
+from zope.app.component.interfaces import ISite
 from zope.app.appsetup.bootstrap import getInformationFromEvent
 from zope.app.appsetup.interfaces import IDatabaseOpenedEvent
 from zope.app.appsetup.interfaces import DatabaseOpenedWithRoot
