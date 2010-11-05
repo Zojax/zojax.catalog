@@ -37,18 +37,33 @@ def bootstrapSubscriber(ev):
     if portal is None:
         connection.close()
         return
-    setSite(portal)
+    def findObjectsProviding(root):
+        if ISite.providedBy(root):
+            yield root
+
+        values = getattr(root, 'values', None)
+        if callable(values):
+            for subobj in values():
+                for match in findObjectsProviding(subobj):
+                    yield match
     try:
-        try:
-            catalog = component.getUtility(IConfiglet, 'system.catalog').catalog
-        except LookupError:
-            return
-        if len(list(catalog)) != len(list(catalog.getIndexes())):
-            logger.info('Updating Catalog Indexes...')
-            catalog.clear()
-            catalog.updateIndexes()
-            logger.info('Done!')
+        for portal in findObjectsProviding(portal):
+            setSite(portal)
+            try:
+                try:
+                    catalog = component.getUtility(IConfiglet, 'system.catalog').catalog
+                except LookupError:
+                    continue
+                try:
+                    if len(list(catalog)) != len(list(catalog.getIndexes())):
+                        logger.info('Updating Catalog Indexes...')
+                        catalog.clear()
+                        catalog.updateIndexes()
+                        logger.info('Done!')
+                except ComponentLookupError:
+                    continue
+            finally:
+                setSite(None)
     finally:
         transaction.commit()
-        setSite(None)
         connection.close()
