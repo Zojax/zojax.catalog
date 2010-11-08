@@ -19,6 +19,7 @@ import logging
 
 import transaction
 from zope import event, component, interface
+from zope.component.interfaces import ComponentLookupError
 from zope.lifecycleevent import ObjectCreatedEvent
 from zope.traversing.interfaces import IContainmentRoot
 from zope.app.component.hooks import getSite, setSite
