@@ -29,7 +29,7 @@ from zc.catalog.catalogindex import SetIndex, ValueIndex
 
 from zojax.pathindex.index import PathIndex
 from zojax.security.interfaces import IPrincipalGroups
-from zojax.content.type.interfaces import IContentType, IContentTypeType
+from zojax.content.type.interfaces import IContentType, IContentTypeType, IItem
 
 from index import DateTimeValueIndex
 from utils import Indexable
@@ -114,11 +114,17 @@ def searchableTextIndex():
 class IndexableTitle(object):
 
     def __init__(self, content, default=None):
+        item = IItem(content, None)
         props = IDCDescriptiveProperties(content, None)
         if props is None:
-            self.value = default
+            if item is None:
+                self.value = default
+            else:
+                self.value = item.title.lower()
         else:
             self.value = props.title.lower()
+            if not self.value and item is not None:
+                self.value = item.title.lower()
 
 
 class IndexableContentType(object):
