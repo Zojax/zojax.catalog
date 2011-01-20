@@ -18,9 +18,16 @@ $Id$
 import pytz
 import datetime
 import zope.interface
+from zope.component import getUtility
+from zope.proxy import removeAllProxies
+from zope.app.intid.interfaces import IIntIds
+from zope.traversing.api import getParents
 
 import zc.catalog
 from zc.catalog.i18n import _
+
+from zojax.pathindex.index import PathIndex
+from zojax.content.shortcut.interfaces import IShortcuts
 
 
 class DateTimeNormalizer(zc.catalog.index.DateTimeNormalizer):
@@ -63,3 +70,30 @@ def DateTimeSetIndex(
         DateTimeNormalizer(resolution), True)
     zope.interface.directlyProvides(ix, zc.catalog.interfaces.ISetIndex)
     return ix
+
+
+class PathIndex(PathIndex):
+    
+    def _get_values(self, value, includeValue=False):
+        try:
+            intid = getUtility(IIntIds)
+            parents = getParents(value)
+        except:
+            return None
+
+        if includeValue:
+            parents.append(value)
+            
+        for ob in list(parents):
+            parents.extend(IShortcuts(ob, {}).items())
+
+        ids = []
+        for ob in parents:
+            id = intid.queryId(removeAllProxies(ob))
+            if id is not None:
+                ids.append(id)
+
+        if ids:
+            return ids
+        else:
+            return None

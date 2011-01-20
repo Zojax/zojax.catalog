@@ -27,11 +27,10 @@ from zope.app.security.interfaces import IAuthentication
 
 from zc.catalog.catalogindex import SetIndex, ValueIndex
 
-from zojax.pathindex.index import PathIndex
 from zojax.security.interfaces import IPrincipalGroups
 from zojax.content.type.interfaces import IContentType, IContentTypeType, IItem
 
-from index import DateTimeValueIndex
+from index import DateTimeValueIndex, PathIndex
 from utils import Indexable
 from context import getSearchContext
 from interfaces import IHiddenContent

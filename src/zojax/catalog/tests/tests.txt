@@ -62,7 +62,7 @@ Default indexes
   >>> for index in catalog.getIndexes():
   ...     print index.__name__, index
   owners <zc.catalog.catalogindex.SetIndex ...>
-  traversablePath <zojax.pathindex.index.PathIndex ...>
+  traversablePath <zojax.catalog.index.PathIndex ...>
   name <zc.catalog.catalogindex.ValueIndex ...>
   effective <zc.catalog.catalogindex.NormalizationWrapper ...>
   title <zc.catalog.catalogindex.ValueIndex ...>
