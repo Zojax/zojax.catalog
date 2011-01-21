@@ -15,7 +15,7 @@
 
 $Id$
 """
-from zope.component import getUtility, queryUtility
+from zope.component import getUtility, queryUtility, getUtilitiesFor
 from zope.proxy import removeAllProxies
 from zope.configuration.name import resolve
 from zope.security import checkPermission
