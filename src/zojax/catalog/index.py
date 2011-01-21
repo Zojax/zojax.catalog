@@ -21,10 +21,11 @@ import zope.interface
 from zope.component import getUtility
 from zope.proxy import removeAllProxies
 from zope.app.intid.interfaces import IIntIds
-from zope.traversing.api import getParents
+from zope.traversing.api import getParents, getPath
 
 import zc.catalog
 from zc.catalog.i18n import _
+from zc.catalog.index import parseQuery
 
 from zojax.pathindex.index import PathIndex
 from zojax.content.shortcut.interfaces import IShortcuts
@@ -74,7 +75,7 @@ def DateTimeSetIndex(
 
 class PathIndex(PathIndex):
     
-    def _get_values(self, value, includeValue=False):
+    def _get_values(self, value, includeValue=False, includeShortcuts=True):
         try:
             intid = getUtility(IIntIds)
             parents = getParents(value)
@@ -83,10 +84,11 @@ class PathIndex(PathIndex):
 
         if includeValue:
             parents.append(value)
-            
-        for ob in list(parents):
-            parents.extend(IShortcuts(ob, {}).items())
 
+        if includeShortcuts:    
+            for ob in list(parents):
+                parents.extend(IShortcuts(ob, {}).items())
+        
         ids = []
         for ob in parents:
             id = intid.queryId(removeAllProxies(ob))
@@ -97,3 +99,26 @@ class PathIndex(PathIndex):
             return ids
         else:
             return None
+    
+    def apply(self, query):
+        orig_query = query
+        query_type, query = parseQuery(query)
+        if query_type == 'any_of':
+            result = None
+            for value in query:
+                values = self._get_values(value, True, False)
+                if values is not None:
+                    res = super(PathIndex, self).apply({'all_of': values})
+                    if result is None:
+                        result = res
+                    else:
+                        result.update(res)
+            return result
+        elif query_type == 'all_of':
+            # this query types is useless for path index
+            return None
+        elif query_type == 'between':
+            # not implemented
+            return None
+
+        return super(PathIndex, self).apply(orig_query)
