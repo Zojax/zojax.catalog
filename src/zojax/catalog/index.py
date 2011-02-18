@@ -27,7 +27,7 @@ import zc.catalog
 from zc.catalog.i18n import _
 from zc.catalog.index import parseQuery
 
-from zojax.pathindex import index as pathindex
+from zojax.pathindex.index import PathIndex
 from zojax.content.shortcut.interfaces import IShortcuts
 
 
