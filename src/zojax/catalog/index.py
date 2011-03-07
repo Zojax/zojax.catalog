@@ -27,7 +27,7 @@ import zc.catalog
 from zc.catalog.i18n import _
 from zc.catalog.index import parseQuery
 
-from zojax.pathindex.index import PathIndex
+from zojax.pathindex.index import PathIndex as PathIndeBase
 from zojax.content.shortcut.interfaces import IShortcuts
 
 
@@ -73,14 +73,13 @@ def DateTimeSetIndex(
     return ix
 
 
-class PathIndex(PathIndex):
+class PathIndex(PathIndeBase):
     
     def _get_values_shortcuts(self, value, includeValue=False, includeShortcuts=True):
         try:
             intid = getUtility(IIntIds)
             parents = getParents(value)
         except Exception, e:
-            print e
             return None
 
         if includeValue:
@@ -104,4 +103,4 @@ class PathIndex(PathIndex):
     def index_doc(self, doc_id, value):
         values = self._get_values_shortcuts(value)
         if values is not None:
-            super(PathIndex, self).index_doc(doc_id, values)
+            super(PathIndeBase, self).index_doc(doc_id, values)
