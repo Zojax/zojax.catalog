@@ -79,7 +79,8 @@ class PathIndex(PathIndex):
         try:
             intid = getUtility(IIntIds)
             parents = getParents(value)
-        except:
+        except Exception, e:
+            print e
             return None
 
         if includeValue:
