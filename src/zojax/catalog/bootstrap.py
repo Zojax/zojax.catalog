@@ -11,6 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+from zope.traversing.api import getParents
 """
 
 $Id$
@@ -42,6 +43,9 @@ def bootstrapSubscriber(ev):
     def findObjectsProviding(root):
         if ISite.providedBy(root):
             yield root
+        
+        if len(getParents(root)) > 3:
+            raise StopIteration()
 
         values = getattr(root, 'values', None)
         if callable(values):
