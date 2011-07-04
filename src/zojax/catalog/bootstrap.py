@@ -44,7 +44,10 @@ def bootstrapSubscriber(ev):
         if ISite.providedBy(root):
             yield root
         
-        if len(getParents(root)) > 3:
+        try:
+            if len(getParents(root)) > 3:
+                raise StopIteration()
+        except TypeError:
             raise StopIteration()
 
         values = getattr(root, 'values', None)
