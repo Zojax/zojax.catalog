@@ -28,7 +28,8 @@ from zope.app.security.interfaces import IAuthentication
 from zc.catalog.catalogindex import SetIndex, ValueIndex
 
 from zojax.security.interfaces import IPrincipalGroups
-from zojax.content.type.interfaces import IContentType, IContentTypeType, IItem
+from zojax.content.type.interfaces import IContentType, IContentTypeType, IItem,\
+    IOrder
 
 from index import DateTimeValueIndex, PathIndex
 from utils import Indexable
@@ -108,6 +109,20 @@ def allowedRoleAndPrincipalsIndex():
 
 def searchableTextIndex():
     return TextIndex('getSearchableText', ISearchableText, True)
+
+
+def positionInParentIndex():
+    return ValueIndex(
+        'value', Indexable('zojax.catalog.defaultindexes.PositionInParent'))
+
+
+class PositionInParent(object):
+
+    def __init__(self, content, default=None):
+        self.value = default
+        items = IOrder(content.__parent__, None)
+        if items is not None:
+            self.value = items.keyPosition(content.__name__)
 
 
 class IndexableTitle(object):

@@ -76,4 +76,10 @@
      component=".defaultindexes.searchableTextIndex"
      provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
 
+  <utility
+     name="positionInParent"
+     component=".defaultindexes.positionInParentIndex"
+     provides="zojax.catalog.interfaces.ICatalogIndexFactory" />
+
+
 </configure>
