@@ -122,7 +122,10 @@ class PositionInParent(object):
         self.value = default
         items = IOrder(content.__parent__, None)
         if items is not None:
-            self.value = items.keyPosition(content.__name__)
+            try:
+                self.value = items.keyPosition(content.__name__)
+            except KeyError:
+                return
 
 
 class IndexableTitle(object):
