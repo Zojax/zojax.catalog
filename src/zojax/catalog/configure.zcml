@@ -82,4 +82,10 @@
      provides="zope.app.generations.interfaces.ISchemaManager"
      component=".generations.schemaManager" />
 
+  <!--  subscriber for moved event -->
+  <subscriber
+      handler="zope.app.catalog.catalog.reindexDocSubscriber"
+      for="zope.app.container.interfaces.IObjectMovedEvent"
+      />
+
 </configure>

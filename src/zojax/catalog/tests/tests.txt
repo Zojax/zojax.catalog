@@ -59,29 +59,30 @@ Default indexes
 
   >>> catalog = sm.getUtility(interfaces.ICatalog)
 
-  >>> for index in catalog.getIndexes():
+  >>> for index in sorted(catalog.getIndexes()):
   ...     print index.__name__, index
-  owners <zc.catalog.catalogindex.SetIndex ...>
-  traversablePath <zojax.catalog.index.PathIndex ...>
-  name <zc.catalog.catalogindex.ValueIndex ...>
-  effective <zc.catalog.catalogindex.NormalizationWrapper ...>
-  title <zc.catalog.catalogindex.ValueIndex ...>
-  typeType <zc.catalog.catalogindex.SetIndex ...>
-  expires <zc.catalog.catalogindex.NormalizationWrapper ...>
-  modified <zc.catalog.catalogindex.NormalizationWrapper ...>
-  allowedRoleAndPrincipals <zc.catalog.catalogindex.SetIndex ...>
-  searchableText <...TextIndex ...>
-  searchContext <zc.catalog.catalogindex.SetIndex ...>
-  created <zc.catalog.catalogindex.NormalizationWrapper ...>
+  expires <zc.catalog.catalogindex.NormalizationWrapper object ...>
+  effective <zc.catalog.catalogindex.NormalizationWrapper object ...>
+  modified <zc.catalog.catalogindex.NormalizationWrapper object ...>
+  created <zc.catalog.catalogindex.NormalizationWrapper object ...>
+  traversablePath <zojax.catalog.index.PathIndex object ...>
+  allowedRoleAndPrincipals <zc.catalog.catalogindex.SetIndex object ...>
+  owners <zc.catalog.catalogindex.SetIndex object ...>
+  typeType <zc.catalog.catalogindex.SetIndex object ...>
+  searchContext <zc.catalog.catalogindex.SetIndex object ...>
+  creators <zc.catalog.catalogindex.SetIndex object ...>
+  searchableText <zope.app.catalog.text.TextIndex object ...>
+  positionInParent <zc.catalog.catalogindex.ValueIndex object ...>
+  name <zc.catalog.catalogindex.ValueIndex object ...>
+  title <zc.catalog.catalogindex.ValueIndex object ...>
   hidden <zc.catalog.catalogindex.ValueIndex object ...>
-  creators <zc.catalog.catalogindex.SetIndex ...>
-  type <zc.catalog.catalogindex.ValueIndex ...>
+  type <zc.catalog.catalogindex.ValueIndex object ...>
 
   >>> catalog.getIndex('created')
   <zc.catalog.catalogindex.NormalizationWrapper ...>
 
   >>> len(list(catalog.getIndexes()))
-  15
+  16
 
 
 Create object as manager
@@ -303,6 +304,30 @@ change effective date
   >>> publishInfo.effective = datetime(2000, 1, 2, tzinfo=utc)
   >>> event.notify(ObjectModifiedEvent(contentOb))
 
+
+Object moving
+-------------
+catalog should react on ObjectMovedEvent
+  
+  >>> item = root['folder']['Content users']
+
+we see that item if found on it's location in the tree
+
+  >>> list(catalog.searchResults(traversablePath={'any_of': (root['folder'],)},
+  ...                       name={'any_of': (item.__name__,)}))
+  [<MyContent "Content users"-"Users content">]
+  
+  >>> from zope.copypastemove.interfaces import IObjectMover
+
+we move it to a different location
+  >>> IObjectMover(item).moveTo(root)
+  u'Content users'
+  
+and we can't found it on old location
+  >>> list(catalog.searchResults(traversablePath={'any_of': (root['folder'],)},
+  ...                       name={'any_of': (item.__name__,)}))
+  []
+
 Pluggable catalog query parameters
 
 We can register catalog query parameters as plugins:
@@ -389,7 +414,7 @@ just tests
   >>> catalog.clear()
 
 
-moer tests
+more tests
 
   >>> list(catmod.queryCatalog({'name': {'any_of': (None,)}}))
   []
