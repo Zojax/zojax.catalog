@@ -1,0 +1,91 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Thu Dec  8 22:31:41 2011\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: src/zojax/catalog/browser/advanced.pt:10
+msgid "Index"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:11
+msgid "Document Count"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:12
+msgid "Word Count"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:2
+msgid "Manage catalog"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:32
+msgid "Reindex"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:34
+msgid "Reindex security information"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.pt:37
+msgid "Remove"
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.py:33
+msgid "Please select indexes."
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.py:39
+msgid "Catalog indexes have been removed."
+msgstr ""
+
+#: src/zojax/catalog/browser/advanced.py:44
+#: src/zojax/catalog/browser/advanced.py:50
+msgid "Catalog has been reindexed."
+msgstr ""
+
+#: src/zojax/catalog/catalog.py:192
+msgid "Index doesn't support sorting."
+msgstr ""
+
+#: src/zojax/catalog/catalog.py:196
+#. Default: ""
+msgid "Invalid index: ${sort_on}"
+msgstr ""
+
+#: src/zojax/catalog/configure.zcml:51
+msgid "Catalog"
+msgstr ""
+
+#: src/zojax/catalog/configure.zcml:51
+msgid "Content indexing service."
+msgstr ""
+
+#: src/zojax/catalog/index.py:39
+msgid "This index only indexes timezone-aware datetimes."
+msgstr ""
+
+#: src/zojax/catalog/interfaces.py:103
+msgid "Weight"
+msgstr ""
+
