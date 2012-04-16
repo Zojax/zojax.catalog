@@ -15,6 +15,7 @@
 
 $Id$
 """
+import logging
 from pytz import utc
 from threading import local
 from datetime import datetime
@@ -107,12 +108,15 @@ class Catalog(catalog.Catalog):
             index.unindex_doc(docid)
 
     def updateIndex(self, index):
+        logger = logging.getLogger(u'zojax.catalog')
+        logger.info('Starting updating of `%s` index' % index.__name__)
         for uid, obj in self._visitSublocations():
             obj = ISearchableContent(obj, None)
             if obj is None:
                 continue
-
+            
             index.index_doc(uid, obj)
+        logger.info('Done updating of `%s` index' % index.__name__)
 
     def updateIndexes(self):
         indexes = list(self.getIndexes())
