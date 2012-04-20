@@ -15,7 +15,6 @@
 
 $Id$
 """
-import logging
 from pytz import utc
 from threading import local
 from datetime import datetime
@@ -45,6 +44,8 @@ from context import getSearchContext
 from utils import getRequest, listAllowedRoles
 from result import ResultSet, ReverseResultSet
 
+import logging
+logger = logging.getLogger("zojax.catalog")
 
 class Catalog(catalog.Catalog):
     interface.implements(ICatalog)
@@ -108,17 +109,17 @@ class Catalog(catalog.Catalog):
             index.unindex_doc(docid)
 
     def updateIndex(self, index):
-        logger = logging.getLogger(u'zojax.catalog')
         logger.info('Starting updating of `%s` index' % index.__name__)
         for uid, obj in self._visitSublocations():
             obj = ISearchableContent(obj, None)
             if obj is None:
                 continue
-            
+
             index.index_doc(uid, obj)
         logger.info('Done updating of `%s` index' % index.__name__)
 
     def updateIndexes(self):
+        logger.info('Starting updateIndexes')
         indexes = list(self.getIndexes())
 
         for uid, obj in self._visitSublocations():
@@ -126,8 +127,12 @@ class Catalog(catalog.Catalog):
             if obj is None:
                 continue
 
+            logger.info('updateIndexes for `%s`' % obj)
             for index in indexes:
+                #logger.info('Reindex of `%s` object' % index.__name__)
                 index.index_doc(uid, obj)
+
+        logger.info('Done updateIndexes')
 
     def updateIndexesByName(self, indexes):
         for id in indexes:
@@ -264,10 +269,10 @@ class Catalog(catalog.Catalog):
             return ReverseResultSet(results, uidutil)
         else:
             return ResultSet(results, uidutil)
-        
+
     def getPluggableQuery(self):
         query = {}
-        for name, utility in sorted(getUtilitiesFor(interfaces.ICatalogQueryPlugin), 
+        for name, utility in sorted(getUtilitiesFor(interfaces.ICatalogQueryPlugin),
                                     key=lambda x: x[1].weight):
             if utility.isAvailable():
                 query.update(utility())
