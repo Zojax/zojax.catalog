@@ -15,14 +15,10 @@
 
 $Id$
 """
-import logging
-
 from zope.index.interfaces import IStatistics
 from zope.proxy import removeAllProxies
 from zojax.catalog.interfaces import _
 from zojax.statusmessage.interfaces import IStatusMessage
-
-logger = logging.getLogger('zojax.catalog')
 
 
 class Advanced(object):
@@ -43,20 +39,14 @@ class Advanced(object):
                     _('Catalog indexes have been removed.'))
 
         if 'form.button.reindex' in request:
-            logger.info('Clearing catalog...')
             catalog.clear()
-            logger.info('Clearing catalog done!')
-            logger.info('Updating indexes...')
             catalog.updateIndexes()
-            logger.info('Updating indexes done!')
             IStatusMessage(self.request).add(_('Catalog has been reindexed.'))
 
         if 'form.button.security' in self.request:
-            logger.info('Updating security indexes...')
             catalog.updateIndexesByName(
                 ('allowedRoleAndPrincipals',
                  'draftSubmitTo', 'draftPublishTo', 'draftPublishable'))
-            logger.info('Updating security indexes done!')
             IStatusMessage(self.request).add(_('Catalog has been reindexed.'))
 
         self.catalog = catalog

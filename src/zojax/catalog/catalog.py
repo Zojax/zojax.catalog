@@ -127,7 +127,6 @@ class Catalog(catalog.Catalog):
             if obj is None:
                 continue
 
-            logger.info('updateIndexes for `%s`' % obj)
             for index in indexes:
                 #logger.info('Reindex of `%s` object' % index.__name__)
                 index.index_doc(uid, obj)
