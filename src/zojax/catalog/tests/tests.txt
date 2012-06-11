@@ -59,24 +59,24 @@ Default indexes
 
   >>> catalog = sm.getUtility(interfaces.ICatalog)
 
-  >>> for index in sorted(catalog.getIndexes()):
+  >>> for index in sorted(catalog.getIndexes(), key=lambda x: x.__name__):
   ...     print index.__name__, index
-  expires <zc.catalog.catalogindex.NormalizationWrapper object ...>
-  effective <zc.catalog.catalogindex.NormalizationWrapper object ...>
-  modified <zc.catalog.catalogindex.NormalizationWrapper object ...>
-  created <zc.catalog.catalogindex.NormalizationWrapper object ...>
-  traversablePath <zojax.catalog.index.PathIndex object ...>
-  allowedRoleAndPrincipals <zc.catalog.catalogindex.SetIndex object ...>
-  owners <zc.catalog.catalogindex.SetIndex object ...>
-  typeType <zc.catalog.catalogindex.SetIndex object ...>
-  searchContext <zc.catalog.catalogindex.SetIndex object ...>
-  creators <zc.catalog.catalogindex.SetIndex object ...>
-  searchableText <zope.app.catalog.text.TextIndex object ...>
-  positionInParent <zc.catalog.catalogindex.ValueIndex object ...>
-  name <zc.catalog.catalogindex.ValueIndex object ...>
-  title <zc.catalog.catalogindex.ValueIndex object ...>
-  hidden <zc.catalog.catalogindex.ValueIndex object ...>
-  type <zc.catalog.catalogindex.ValueIndex object ...>
+  allowedRoleAndPrincipals <zc.catalog.catalogindex.SetIndex object at ...>
+  created <zc.catalog.catalogindex.NormalizationWrapper object at ...>
+  creators <zc.catalog.catalogindex.SetIndex object at ...>
+  effective <zc.catalog.catalogindex.NormalizationWrapper object at ...>
+  expires <zc.catalog.catalogindex.NormalizationWrapper object at ...>
+  hidden <zc.catalog.catalogindex.ValueIndex object at ...>
+  modified <zc.catalog.catalogindex.NormalizationWrapper object at ...>
+  name <zc.catalog.catalogindex.ValueIndex object at ...>
+  owners <zc.catalog.catalogindex.SetIndex object at ...>
+  positionInParent <zc.catalog.catalogindex.ValueIndex object at ...>
+  searchContext <zc.catalog.catalogindex.SetIndex object at ...>
+  searchableText <zope.app.catalog.text.TextIndex object at ...>
+  title <zc.catalog.catalogindex.ValueIndex object at ...>
+  traversablePath <zojax.catalog.index.PathIndex object at ...>
+  type <zc.catalog.catalogindex.ValueIndex object at ...>
+  typeType <zc.catalog.catalogindex.SetIndex object at ...>
 
   >>> catalog.getIndex('created')
   <zc.catalog.catalogindex.NormalizationWrapper ...>
@@ -308,7 +308,7 @@ change effective date
 Object moving
 -------------
 catalog should react on ObjectMovedEvent
-  
+
   >>> item = root['folder']['Content users']
 
 we see that item if found on it's location in the tree
@@ -316,13 +316,13 @@ we see that item if found on it's location in the tree
   >>> list(catalog.searchResults(traversablePath={'any_of': (root['folder'],)},
   ...                       name={'any_of': (item.__name__,)}))
   [<MyContent "Content users"-"Users content">]
-  
+
   >>> from zope.copypastemove.interfaces import IObjectMover
 
 we move it to a different location
   >>> IObjectMover(item).moveTo(root)
   u'Content users'
-  
+
 and we can't found it on old location
   >>> list(catalog.searchResults(traversablePath={'any_of': (root['folder'],)},
   ...                       name={'any_of': (item.__name__,)}))
