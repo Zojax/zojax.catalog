@@ -27,6 +27,7 @@ class ResultSet(object):
     def __init__(self, uids, uidutil):
         self.uids = uids
         self.uidutil = uidutil
+        self.filters = []
 
         try:
             self.uids_keys = uids.keys()
@@ -63,9 +64,13 @@ class ResultSet(object):
 
             for idx in range(start, stop):
                 if idx in objects:
-                    values.append(objects[idx])
+                    ob = objects[idx]
                 else:
-                    values.append(self[idx])
+                    ob = self[idx]
+
+                if self.checkFilters(ob):
+                    values.append(ob)
+
             return values
 
         try:
@@ -95,6 +100,20 @@ class ResultSet(object):
         self.uids = [id for weight, id in res.byValue(minValue)]
         self.uids_keys = self.uids
         self._len = len(self.uids)
+
+    def filter(self, lmd=None):
+        if lmd is not None:
+            self.filters.append(lmd)
+
+    def checkFilters(self, ob):
+        if not self.filters:
+            return True
+        allow = False
+        for x in self.filters:
+            if x(ob):
+                allow = True
+                break
+        return allow
 
 
 class ReverseResultSet(ResultSet):
