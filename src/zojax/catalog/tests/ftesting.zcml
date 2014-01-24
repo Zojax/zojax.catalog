@@ -7,7 +7,7 @@
   <include package="zojax.autoinclude" file="meta.zcml" />
 
   <includeAllDependencies package="zojax.catalog" extras="test"
-			  exclude="zojax.content.draft
+			  exclude="
 				   zojax.content.space
 				   zojax.principal.field" />
 
