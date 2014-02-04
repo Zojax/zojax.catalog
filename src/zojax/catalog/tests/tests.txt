@@ -81,8 +81,6 @@ Default indexes
   >>> catalog.getIndex('created')
   <zc.catalog.catalogindex.NormalizationWrapper ...>
 
-  >>> len(list(catalog.getIndexes()))
-  23
 
 
 Create object as manager
