@@ -15,10 +15,11 @@
 
 $Id$
 """
-import sys, types
+import sys
+import types
 from BTrees.IFBTree import weightedIntersection
 
-minValue = float(-sys.maxint-1)
+minValue = float(-sys.maxint - 1)
 
 
 class ResultSet(object):
@@ -77,9 +78,12 @@ class ResultSet(object):
             return self._objects[idx]
         except KeyError:
             uid = self.uids_keys[idx]
-            ob = self.uidutil.getObject(uid)
-            self._objects[idx] = ob
-            return ob
+            try:
+                ob = self.uidutil.getObject(uid)
+                self._objects[idx] = ob
+                return ob
+            except KeyError:
+                return None
 
     def get(self, idx, default=None):
         try:
